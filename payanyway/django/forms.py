@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from django import forms
 from django.template.loader import render_to_string
+import hashlib
 
 from payanyway.api import Api
 
@@ -10,6 +11,24 @@ class MonetaForm(forms.Form, Api):
         if not key in self.fields.keys():
             self.fields[key] = forms.CharField(widget=forms.HiddenInput)
         self.fields[key].initial = value
+
+
+    #код ответа на уведомление об оплате
+    def _get_response_code(self):
+        return 200 if self.is_valid() else 100
+
+    #подпись для ответа на уведомление
+    def _generate_response_signature(self):
+        """
+        MNT_SIGNATURE = MD5(
+            RESPONSE_CODE + MNT_ID + MNT_TRANSACTION_ID + КОД ПРОВЕРКИ ЦЕЛОСТНОСТИ ДАННЫХ
+        )
+        """
+        response_code = self._get_response_code()
+        params = [response_code, self._account_id, self._transaction_id, self._integrity_check_code]
+        string_to_encode = u''.join(map(unicode, params))
+        signature = hashlib.md5(string_to_encode).hexdigest()
+        return signature
 
     def _get_param(self, key):
         if key in self.fields.keys():
