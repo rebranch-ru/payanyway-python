@@ -9,6 +9,9 @@ class Api(object):
     PAYMENT_SYSTEMS_QIWI = u'1031'
     PAYMENT_SYSTEMS_CARD = u'1887'
     PAYMENT_SYSTEMS_SMS = u'36960'
+    PAYMENT_SYSTEMS_YANDEX = u'1020'
+    PAYMENT_SYSTEMS_ALFACLICK = u'31877'
+    PAYMENT_SYSTEMS_SBERBANK = u'32863'
 
     _use_signature = False
     _integrity_check_code = None
