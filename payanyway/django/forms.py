@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
-from django import forms
-from django.template.loader import render_to_string
 import hashlib
+import urllib
+from django import forms
 
 from payanyway.api import Api
 
@@ -35,6 +35,16 @@ class MonetaForm(forms.Form, Api):
             return self.fields[key].initial
         else:
             return None
+
+    def get_payment_url(self):
+        data = {}
+        for field in self.fields:
+            data[field] = self.fields[field].initial
+        url = u'{}?{}'.format(
+            self.action_url,
+            urllib.urlencode(data)
+        )
+        return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None,
                  use_signature=False, currency_code=u'RUB', test_mode=False, payment_system=None, *args, **kwargs):

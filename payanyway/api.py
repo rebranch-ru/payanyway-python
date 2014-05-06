@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import hashlib
+import urllib
 
 from utils import AttributeDescriptor
 
@@ -162,6 +163,14 @@ class Api(object):
     _operation_id = AttributeDescriptor(_PARAM_OPERATION_ID)
     _request_signature = AttributeDescriptor(_PARAM_SIGNATURE)
     _followup = AttributeDescriptor(_PARAM_FOLLOWUP)
+
+    def get_payment_url(self):
+        data = self._params.copy()
+        url = u'{}?{}'.format(
+            self.action_url,
+            urllib.urlencode(data)
+        )
+        return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None, use_signature=False,
                  currency_code=u'RUB', test_mode=False, *args, **kwargs):
