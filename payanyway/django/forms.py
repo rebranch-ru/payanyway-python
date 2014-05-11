@@ -47,7 +47,8 @@ class MonetaForm(forms.Form, Api):
         return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None,
-                 use_signature=False, currency_code=u'RUB', test_mode=False, payment_system=None, *args, **kwargs):
+                 use_signature=False, currency_code=u'RUB', test_mode=False, payment_system=None, test_server=True,
+                 *args, **kwargs):
         super(MonetaForm, self).__init__(*args, **kwargs)
         self._account_id = account_id
         self._transaction_id = transaction_id
@@ -55,6 +56,7 @@ class MonetaForm(forms.Form, Api):
         self._test_mode = test_mode
         self._amount = amount
         self._integrity_check_code = integrity_check_code
+        self._use_test_server = test_server
         if payment_system:
             self._payment_system = payment_system
         if use_signature:

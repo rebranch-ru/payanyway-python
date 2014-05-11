@@ -18,7 +18,8 @@ class Api(object):
     _integrity_check_code = None
     _notification_signature = None
 
-    action_url = u'https://demo.moneta.ru/assistant.htm'
+    _action_url_dev = u'https://demo.moneta.ru/assistant.htm'
+    _action_url_production = u'https://moneta.ru/assistant.htm'
 
     #Идентификатор магазина в системе MONETA.RU. Соответствует номеру расширенного счета магазина.
     _PARAM_ACCOUNT_ID = u'MNT_ID'
@@ -155,6 +156,13 @@ class Api(object):
         self._followup = u'true'
         self._set_param(self._PARAM_PAYMENT_SYSTEM_UNIT_ID, value)
 
+    @property
+    def action_url(self):
+        if self._use_test_server:
+            return self._action_url_dev
+        else:
+            return self._action_url_production
+
     _account_id = AttributeDescriptor(_PARAM_ACCOUNT_ID)
     _transaction_id = AttributeDescriptor(_PARAM_TRANSACTION_ID)
     _currency_code = AttributeDescriptor(_PARAM_CURRENCY_CODE)
@@ -173,7 +181,7 @@ class Api(object):
         return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None, use_signature=False,
-                 currency_code=u'RUB', test_mode=False, *args, **kwargs):
+                 currency_code=u'RUB', test_mode=False, test_server=True, *args, **kwargs):
         self._params = {}
         self._account_id = account_id
         self._transaction_id = transaction_id
@@ -181,5 +189,6 @@ class Api(object):
         self._test_mode = test_mode
         self._amount = amount
         self._integrity_check_code = integrity_check_code
+        self._use_test_server = test_server
         if use_signature:
             self._request_signature = self._generate_request_signature()
