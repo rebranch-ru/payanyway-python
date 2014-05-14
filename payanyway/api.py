@@ -181,7 +181,7 @@ class Api(object):
         return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None, use_signature=False,
-                 currency_code=u'RUB', test_mode=False, test_server=True, *args, **kwargs):
+                 currency_code=u'RUB', test_mode=False, test_server=True, payment_system=None, *args, **kwargs):
         self._params = {}
         self._account_id = account_id
         self._transaction_id = transaction_id
@@ -192,3 +192,5 @@ class Api(object):
         self._use_test_server = test_server
         if use_signature:
             self._request_signature = self._generate_request_signature()
+        if payment_system:
+            self._payment_system = payment_system
