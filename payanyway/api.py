@@ -70,6 +70,11 @@ class Api(object):
     #Предварительный выбор платежной системы.
     _PARAM_PAYMENT_SYSTEM_UNIT_ID = u'paymentSystem.unitId'
 
+    #Поля произвольных параметров. Будут возращены магазину в параметрах отчета о проведенной оплате.
+    _PARAM_CUSTOM1 = u'MNT_CUSTOM1'
+    _PARAM_CUSTOM2 = u'MNT_CUSTOM2'
+    _PARAM_CUSTOM3 = u'MNT_CUSTOM3'
+
     _raw_init_params = (
         _PARAM_ACCOUNT_ID,
         _PARAM_TRANSACTION_ID,
@@ -78,7 +83,10 @@ class Api(object):
         _PARAM_TEST_MODE,
         _PARAM_DESCRIPTION,
         _PARAM_SUCCESS_URL,
-        _PARAM_OPERATION_ID
+        _PARAM_OPERATION_ID,
+        _PARAM_CUSTOM1,
+        _PARAM_CUSTOM2,
+        _PARAM_CUSTOM3,
     )
 
     def _set_param(self, key, value):
@@ -171,6 +179,9 @@ class Api(object):
     _operation_id = AttributeDescriptor(_PARAM_OPERATION_ID)
     _request_signature = AttributeDescriptor(_PARAM_SIGNATURE)
     _followup = AttributeDescriptor(_PARAM_FOLLOWUP)
+    _custom1 = AttributeDescriptor(_PARAM_CUSTOM1)
+    _custom2 = AttributeDescriptor(_PARAM_CUSTOM2)
+    _custom3 = AttributeDescriptor(_PARAM_CUSTOM3)
 
     def get_payment_url(self):
         data = self._params.copy()
@@ -181,7 +192,9 @@ class Api(object):
         return url
 
     def __init__(self, account_id=None, transaction_id=None, amount=0, integrity_check_code=None, use_signature=False,
-                 currency_code=u'RUB', test_mode=False, test_server=True, payment_system=None, *args, **kwargs):
+                 currency_code=u'RUB', test_mode=False, test_server=True, payment_system=None,
+                 custom1=None, custom2=None, custom3=None,
+                 *args, **kwargs):
         self._params = {}
         self._account_id = account_id
         self._transaction_id = transaction_id
@@ -190,6 +203,12 @@ class Api(object):
         self._amount = amount
         self._integrity_check_code = integrity_check_code
         self._use_test_server = test_server
+        if custom1:
+            self._custom1 = custom1
+        if custom2:
+            self._custom2 = custom2
+        if custom3:
+            self._custom3 = custom3
         if use_signature:
             self._request_signature = self._generate_request_signature()
         if payment_system:
